@@ -40,7 +40,7 @@ func main(){
 	deleteRouter.HandleFunc("/apartments/{id:[0-9]+}", handler.Delete) 
 	
 
-	os.Setenv("PORT", "9090")
+	//os.Setenv("PORT", "9090")
 	port := os.Getenv("PORT")
 
 	s := &http.Server{
