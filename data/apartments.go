@@ -44,6 +44,15 @@ func DeleteApartment(id int) error {
 	return nil
 }
 
+func GetApartmentByID(id int) (*Apartment, error) {
+	i := findIndexByApartmentID(id)
+	if id == -1 {
+		return nil, ErrApartmentNotFound
+	}
+
+	return apartmentList[i], nil
+}
+
 func UpdateApartment(p Apartment) error {
 	i := findIndexByApartmentID(p.ID)
 	if i == -1 {

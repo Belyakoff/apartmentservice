@@ -25,12 +25,12 @@ func main(){
 
 	getRouter := sm.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/apartments", handler.ListAll)
+	getRouter.HandleFunc("/apartments/{id:[0-9]+}", handler.ListSingle)
 
   	putRouter := sm.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/apartments", handler.Update)
 	putRouter.Use(handler.MiddlewareValidateApartment)
 	
-
 	postRouter := sm.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("/apartments", handler.Create)
 	postRouter.Use(handler.MiddlewareValidateApartment)
