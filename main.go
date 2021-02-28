@@ -36,8 +36,9 @@ func main(){
 	postRouter.Use(handler.MiddlewareValidateApartment)
 	
 
-	//deleteRouter := sm.Methods(http.MethodDelete).Subrouter()
-	//deleteRouter.HandleFunc("/apartments/{id:[0-9]+}", handler.Delete) 
+	deleteRouter := sm.Methods(http.MethodDelete).Subrouter()
+	deleteRouter.HandleFunc("/apartments/{id:[0-9]+}", handler.Delete) 
+	
 
 	os.Setenv("PORT", "9090")
 	port := os.Getenv("PORT")
