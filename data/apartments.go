@@ -13,7 +13,7 @@ type Apartment struct {
 	Rayon         string  `json:"rayon"`
 	Adress        string  `json:"adress"`
 	Price         float32 `json:"price"`
-	Subprice       string  `json:"subprice"`
+	Subprice      string  `json:"subprice"`
 	Phone_number  string  `json:"phone_number" validate:"phone_number"`
 	Description_text  string `json:"description_text"`
 }
