@@ -18,20 +18,11 @@ type Apartment struct {
 	Description_text  string `json:"description_text"`
 }
 
+
 type Apartments []*Apartment
 
 var ErrApartmentNotFound = fmt.Errorf("Apartment not found")
 
-func GetApartments() Apartments {
-	return apartmentList
-}
-
-func AddApartment(p Apartment){
-	//fmt.Printf("v%",p)
-	maxID := apartmentList[len(apartmentList)-1].ID
-	p.ID = maxID + 1
-	apartmentList = append(apartmentList, &p)
-}
 
 func DeleteApartment(id int) error {
 	i := findIndexByApartmentID(id)
@@ -44,14 +35,6 @@ func DeleteApartment(id int) error {
 	return nil
 }
 
-func GetApartmentByID(id int) (*Apartment, error) {
-	i := findIndexByApartmentID(id)
-	if id == -1 {
-		return nil, ErrApartmentNotFound
-	}
-
-	return apartmentList[i], nil
-}
 
 func UpdateApartment(p Apartment) error {
 	i := findIndexByApartmentID(p.ID)

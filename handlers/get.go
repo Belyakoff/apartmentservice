@@ -2,15 +2,18 @@ package handlers
 
 import (
 	"net/http"
-
+	"strconv"
+	"github.com/gorilla/mux"
 	"github.com/Belyakoff/apartmentservice/data"
+	"github.com/Belyakoff/apartmentservice/repository"
+
 )
 
 
 func (p *Apartments) ListAll(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("[DEBUG] get all records")
 
-	apartments := data.GetApartments()
+	apartments := repository.GetItems(p.col)
 
 	err := data.ToJSON(apartments, rw)
 	
@@ -21,33 +24,25 @@ func (p *Apartments) ListAll(rw http.ResponseWriter, r *http.Request) {
 }
 
 
-// ListSingle handles GET requests
-func (p *Apartments) ListSingle(rw http.ResponseWriter, r *http.Request) {
-	id := getApartmentID(r)
+func (p *Apartments) ListByPrice(rw http.ResponseWriter, r *http.Request) {
 
-	p.l.Println("[DEBUG] get record id", id)
-
-	apartment, err := data.GetApartmentByID(id)
-
-	switch err {
-	case nil:
-
-	case data.ErrApartmentNotFound:
-		p.l.Println("[ERROR] fetching apartment", err)
-
-		rw.WriteHeader(http.StatusNotFound)
-		data.ToJSON(&GenericError{Message: err.Error()}, rw)
-		return
-	default:
-		p.l.Println("[ERROR] fetching apartment", err)
-
-		rw.WriteHeader(http.StatusInternalServerError)
-		data.ToJSON(&GenericError{Message: err.Error()}, rw)
-		return
-	}
-
-	err = data.ToJSON(apartment, rw)
+	vars := mux.Vars(r)
+	price, err := strconv.Atoi(vars["price"])
 	if err != nil {
+		panic(err)
+	}
+	op := vars["op"]
+	op = "$"+op
+
+	
+
+	p.l.Println("[DEBUG] search by price ", op)
+
+	apartments := repository.GetItemsByPrice(p.col, price, op)
+
+	err = data.ToJSON(apartments, rw)
+	
+    if err != nil {
 		// we should never be here but log the error just incase
 		p.l.Println("[ERROR] serializing apartment", err)
 	}

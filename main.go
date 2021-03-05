@@ -3,6 +3,7 @@ package main
 
 import (
 	"github.com/Belyakoff/apartmentservice/handlers"
+	"github.com/Belyakoff/apartmentservice/dbconnection"
 	"github.com/gorilla/mux"
 	"net/http"
 	"os" 
@@ -15,29 +16,30 @@ import (
 
 func main(){
 
-	l  := log.New(os.Stdout, " apartment-api ", log.LstdFlags)
+	l   := log.New(os.Stdout, " apartment-api ", log.LstdFlags)
+	col := dbconnection.ConnectMongoDB("real_estate")
 
-	
-	handler := handlers.NewApartments(l)
+
+	handler := handlers.NewApartments(l, col)
 	
 
 	sm := mux.NewRouter()
 
 	getRouter := sm.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/apartments", handler.ListAll)
-	getRouter.HandleFunc("/apartments/{id:[0-9]+}", handler.ListSingle)
+	getRouter.HandleFunc("/apartments/{op:lte|gte}/{price:[0-9]+}", handler.ListByPrice)
 
-  	putRouter := sm.Methods(http.MethodPut).Subrouter()
-	putRouter.HandleFunc("/apartments", handler.Update)
-	putRouter.Use(handler.MiddlewareValidateApartment)
+  	//putRouter := sm.Methods(http.MethodPut).Subrouter()
+	//putRouter.HandleFunc("/apartments", handler.Update)
+	//putRouter.Use(handler.MiddlewareValidateApartment)
 	
 	postRouter := sm.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("/apartments", handler.Create)
 	postRouter.Use(handler.MiddlewareValidateApartment)
 	
 
-	deleteRouter := sm.Methods(http.MethodDelete).Subrouter()
-	deleteRouter.HandleFunc("/apartments/{id:[0-9]+}", handler.Delete) 
+	//deleteRouter := sm.Methods(http.MethodDelete).Subrouter()
+	//deleteRouter.HandleFunc("/apartments/{id}", handler.Delete) 
 	
 
 	//os.Setenv("PORT", "9090")

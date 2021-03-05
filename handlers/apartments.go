@@ -5,17 +5,20 @@ import (
 	"net/http"
 	"strconv"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/mongo"
+	
 )
 
 
 // Apartments handler for getting and updating apartments
 type Apartments struct {
-	l *log.Logger
+	l    *log.Logger
+	col  *mongo.Collection
 }
 
 // NewApartments returns a new apartments handler with the given logger
-func NewApartments(l *log.Logger) *Apartments {
-	return &Apartments{l}
+func NewApartments(l *log.Logger, col *mongo.Collection) *Apartments {
+	return &Apartments{l,col}
 }
 
 type KeyApartment struct{}
